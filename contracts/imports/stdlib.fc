@@ -330,7 +330,7 @@ slice slice_last(slice s, int len) asm "SDCUTLAST";
 
 ;;; Loads a dictionary `D` (HashMapE) from `slice` [s].
 ;;; (returns `null` if `nothing` constructor is used).
-(slice, cell) load_dict(slice s) asm( -> 1 0) "LDDICT";
+(slice, cell) ~load_dict(slice s) asm( -> 1 0) "LDDICT";
 
 ;;; Preloads a dictionary `D` from `slice` [s].
 cell preload_dict(slice s) asm "PLDDICT";
