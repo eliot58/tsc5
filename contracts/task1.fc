@@ -12,7 +12,7 @@
 }
 
 () recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
-    
+    accept_message();
 }
 
 () recv_external(slice in_msg) impure {
@@ -54,13 +54,11 @@
 }
 
 int get_seqno() method_id {
-    accept_message();
     (_, _, _, int seqno) = load_data();
     return seqno;
 }
 
 int get_execution_time() method_id {
-    accept_message();
     (_, int execution_time, _, _) = load_data();
     return execution_time;
 }
