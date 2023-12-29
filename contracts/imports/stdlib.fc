@@ -292,23 +292,23 @@ cell preload_ref(slice s) asm "PLDREF";
 
   {- Functions below are commented because are implemented on compilator level for optimisation -}
 
-;;; Loads a signed [len]-bit integer from a slice [s].
-;; (slice, int) ~load_int(slice s, int len) asm(s len -> 1 0) "LDIX";
+;; ; Loads a signed [len]-bit integer from a slice [s].
+(slice, int) ~load_int(slice s, int len) asm(s len -> 1 0) "LDIX";
 
-;;; Loads an unsigned [len]-bit integer from a slice [s].
-;; (slice, int) ~load_uint(slice s, int len) asm( -> 1 0) "LDUX";
+;; ; Loads an unsigned [len]-bit integer from a slice [s].
+(slice, int) ~load_uint(slice s, int len) asm( -> 1 0) "LDUX";
 
 ;;; Preloads a signed [len]-bit integer from a slice [s].
-;; int preload_int(slice s, int len) asm "PLDIX";
+int ~preload_int(slice s, int len) asm "PLDIX";
 
 ;;; Preloads an unsigned [len]-bit integer from a slice [s].
-;; int preload_uint(slice s, int len) asm "PLDUX";
+int ~preload_uint(slice s, int len) asm "PLDUX";
 
 ;;; Loads the first `0 ≤ len ≤ 1023` bits from slice [s] into a separate `slice s''`.
-;; (slice, slice) load_bits(slice s, int len) asm(s len -> 1 0) "LDSLICEX";
+(slice, slice) ~load_bits(slice s, int len) asm(s len -> 1 0) "LDSLICEX";
 
 ;;; Preloads the first `0 ≤ len ≤ 1023` bits from slice [s] into a separate `slice s''`.
-;; slice preload_bits(slice s, int len) asm "PLDSLICEX";
+slice ~preload_bits(slice s, int len) asm "PLDSLICEX";
 
 ;;; Loads serialized amount of TonCoins (any unsigned integer up to `2^128 - 1`).
 (slice, int) load_grams(slice s) asm( -> 1 0) "LDGRAMS";

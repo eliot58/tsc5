@@ -2,7 +2,7 @@
 
 (int, int, slice, int) load_data () inline {
     var ds = get_data().begin_parse();
-    return (ds~load_uint(256), ds~load_uint(32), ds~load_slice(), ds~load_uint(32));
+    return (ds~load_uint(256), ds~load_uint(32), ds~load_msg_addr(), ds~load_uint(32));
 }
 
 () save_data (int public_key, int execution_time, slice receiver, int seqno) impure inline {
@@ -13,12 +13,12 @@
     int op = in_msg~load_uint(32);
 	int query_id = in_msg~load_uint(64);
 
-    (public_key, execution_time, receiver, seqno) = load_data();
+    (int public_key, int execution_time, slice receiver, int seqno) = load_data();
 
     if (op == 0x9df10277) {
         slice signature = in_msg~load_bits(512);
         cell body = in_msg~load_ref();
-        int hash = cell_hash(body)
+        int hash = cell_hash(body);
         slice s = body.begin_parse();
         int locked_for = s~load_uint(32);
         int new_seqno = s~load_uint(32);
@@ -46,11 +46,11 @@
 }
 
 int get_seqno() method_id {
-    (_, _, _, seqno) = load_data();
+    (_, _, _, int seqno) = load_data();
     return seqno;
 }
 
 int get_execution_time() method_id {
-    (_, execution_time, _, _) = load_data();
+    (_, int execution_time, _, _) = load_data();
     return execution_time;
 }
