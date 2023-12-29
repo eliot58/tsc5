@@ -26,7 +26,7 @@
         slice s = body.begin_parse();
         int locked_for = s~load_uint(32);
         int new_seqno = s~load_uint(32);
-        throw_if(119, new_seqno != seqno + 1);
+        throw_if(119, new_seqno < seqno);
         throw_if(120, ~ check_signature(hash, signature, public_key));
         throw_if(121, locked_for <= 0);
         throw_if(122, execution_time < now());
