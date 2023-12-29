@@ -54,11 +54,13 @@
 }
 
 int get_seqno() method_id {
+    accept_message();
     (_, _, _, int seqno) = load_data();
     return seqno;
 }
 
 int get_execution_time() method_id {
+    accept_message();
     (_, int execution_time, _, _) = load_data();
     return execution_time;
 }
