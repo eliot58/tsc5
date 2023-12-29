@@ -35,7 +35,7 @@
     }
 
     if (op == 0xbb4be234) {
-        throw_if(124, now() < execution_time);
+        throw_if(124, now() <= execution_time);
         cell msg = begin_cell()
             .store_uint(0x18, 6)
             .store_slice(receiver)
