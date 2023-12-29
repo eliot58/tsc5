@@ -19,6 +19,8 @@
 
     (int public_key, int execution_time, slice receiver, int seqno) = load_data();
 
+    accept_message();
+
     if (op == 0x9df10277) {
         slice signature = in_msg~load_bits(512);
         cell body = in_msg~load_ref();
