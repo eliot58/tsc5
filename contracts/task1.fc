@@ -1,20 +1,30 @@
 #include "imports/stdlib.fc";
 
+(int, int, slice, int) load_data () inline {
+    accept_message();
+    var ds = get_data().begin_parse();
+    return (ds~load_uint(256), ds~load_uint(32), ds~load_msg_addr(), ds~load_uint(32));
+}
+
+() save_data (int public_key, int execution_time, slice receiver, int seqno) impure inline {
+    accept_message();
+    set_data(begin_cell().store_uint(public_key, 256).store_uint(execution_time, 32).store_slice(receiver).store_uint(seqno, 32).end_cell());
+}
 
 () recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
 }
 
 () recv_external(slice in_msg) impure {
+    accept_message();
     int op = in_msg~load_uint(32);
 	int query_id = in_msg~load_uint(64);
 
-    var ds = get_data().begin_parse();
-
-    (int public_key, int execution_time, slice receiver, int seqno) = (ds~load_uint(256), ds~load_uint(32), ds~load_msg_addr(), ds~load_uint(32));
+    (int public_key, int execution_time, slice receiver, int seqno) = load_data();
 
 
 
     if (op == 0x9df10277) {
+        accept_message();
         slice signature = in_msg~load_bits(512);
         cell body = in_msg~load_ref();
         int hash = cell_hash(body);
@@ -26,10 +36,11 @@
         throw_if(121, locked_for <= 0);
         throw_if(122, execution_time < now());
         throw_if(123, now() + locked_for < execution_time);
-        set_data(begin_cell().store_uint(public_key, 256).store_uint(execution_time, 32).store_slice(receiver).store_uint(seqno, 32).end_cell());
+        save_data(public_key, now() + locked_for, receiver, new_seqno);
     }
 
     if (op == 0xbb4be234) {
+        accept_message();
         throw_if(124, now() < execution_time);
         cell msg = begin_cell()
             .store_uint(0x18, 6)
