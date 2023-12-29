@@ -31,13 +31,13 @@
         throw_if(119, new_seqno < seqno);
         throw_if(120, ~ check_signature(hash, signature, public_key));
         throw_if(121, locked_for <= 0);
-        throw_if(122, execution_time <= now());
-        throw_if(123, now() + locked_for <= execution_time);
+        throw_if(122, execution_time < now());
+        throw_if(123, now() + locked_for < execution_time);
         save_data(public_key, now() + locked_for, receiver, new_seqno);
     }
 
     if (op == 0xbb4be234) {
-        throw_if(124, now() <= execution_time);
+        throw_if(124, now() < execution_time);
         cell msg = begin_cell()
             .store_uint(0x18, 6)
             .store_slice(receiver)
