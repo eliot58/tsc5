@@ -19,7 +19,6 @@
 
     (int public_key, int execution_time, slice receiver, int seqno) = load_data();
 
-    accept_message();
 
     if (op == 0x9df10277) {
         slice signature = in_msg~load_bits(512);
@@ -37,6 +36,7 @@
     }
 
     if (op == 0xbb4be234) {
+        accept_message();
         throw_if(124, now() < execution_time);
         cell msg = begin_cell()
             .store_uint(0x18, 6)
@@ -52,13 +52,11 @@
 }
 
 int get_seqno() method_id {
-    accept_message();
     (_, _, _, int seqno) = load_data();
     return seqno;
 }
 
 int get_execution_time() method_id {
-    accept_message();
     (_, int execution_time, _, _) = load_data();
     return execution_time;
 }
