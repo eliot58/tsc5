@@ -4,12 +4,7 @@ int equal_slices (slice a, slice b) asm "SDEQ";
 
 (slice, cell) load_data () inline {
     var ds = get_data().begin_parse();
-    slice address = ds~load_msg_addr();
-    cell users = new_dict();
-    if (~ slice_empty?(ds)) {
-        users = ds~load_dict();
-    }
-    return (address, users);
+    return (ds~load_msg_addr(), ds~load_dict());
 }
 
 () save_data (slice admin, cell users) impure inline {
@@ -70,10 +65,10 @@ int get_amount(int share, int amount) inline {
         }
         (int key, slice val, int flag) = users.udict_get_min?(256);
         while(flag){
-            slice addr = begin_cell()
-                    .store_uint(0, 8)
-                    .store_uint(key, 256)
-                    .end_cell().begin_parse();
+            slice addr = begin_cell().store_uint(4, 3)
+                .store_uint(0, 8)
+                .store_uint(key, 256)
+                .end_cell().begin_parse();
             cell msg = begin_cell()
                 .store_uint(0x18, 6)
                 .store_slice(addr)
