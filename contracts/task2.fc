@@ -4,11 +4,16 @@ int equal_slices (slice a, slice b) asm "SDEQ";
 
 (slice, cell) load_data () inline {
     var ds = get_data().begin_parse();
-    return (ds~load_msg_addr(), ds~load_dict(256));
+    slice address = ds~load_msg_addr();
+    cell users = new_dict();
+    if (~ slice_empty?(ds)) {
+        users = ds~load_dict();
+    }
+    return (address, users);
 }
 
 () save_data (slice admin, cell users) impure inline {
-    set_data(begin_cell().store_slice(admin).store_dict(256, users).end_cell());
+    set_data(begin_cell().store_slice(admin).store_dict(users).end_cell());
 }
 
 slice parse_sender_address (cell in_msg_full) inline {
@@ -19,8 +24,8 @@ slice parse_sender_address (cell in_msg_full) inline {
 }
 
 () recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
-    int op = in_msg~load_uint(32);
-	int query_id = in_msg~load_uint(64);
+    int op = in_msg_body~load_uint(32);
+	int query_id = in_msg_body~load_uint(64);
 
     slice sender_address = parse_sender_address(in_msg_full);
     (slice admin, cell users) = load_data();
@@ -29,7 +34,7 @@ slice parse_sender_address (cell in_msg_full) inline {
         slice address = in_msg_body~load_msg_addr();
         int share = in_msg_body~load_uint(32);
         if ~ equal_slices(sender_address, admin) {
-            users~dict_set(256, address, share);
+            users~dict_set(256, address, begin_cell().store_uint(share, 32).end_cell().begin_parse());
         } else {
             throw(120);
         }
@@ -37,7 +42,7 @@ slice parse_sender_address (cell in_msg_full) inline {
     }
 
     if (op == 0x278205c8) {
-        slice address = in_msg_body~load_msg_addr();
+        int address = in_msg_body~load_msg_addr();
         if ~ equal_slices(sender_address, admin) {
             (cell users, int flag) = users~udict_delete_get?(256, address);
             if (~ flag) {
@@ -50,11 +55,34 @@ slice parse_sender_address (cell in_msg_full) inline {
     }
 
     if (op == 0x068530b3) {
-        
+        if (users.dict_empty?()) {
+            throw(122);
+        }
+        (int u, slice s, int f) = users.udict_get_next?(256, 0);
+        while(f){
+            slice addr = begin_cell().store_uint(4, 3)
+                    .store_uint(0, 8)
+                    .store_uint(u, 256)
+                    .end_cell().begin_parse();
+            cell msg = begin_cell()
+                .store_uint(0x18, 6)
+                .store_slice(addr)
+                .store_coins(s~load_uint(32))
+                .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
+                .store_uint(0, 32)
+            .end_cell();
+            send_raw_message(msg, 1);
+            (int u, slice s, int f) = users.udict_get_next?(256, u);
+        }
+
+
     }
 
     if (op == 0x7362d09c) {
-        
+        if (users.dict_empty?()) {
+            throw(122);
+        }
+
     }
 
 
