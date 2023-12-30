@@ -107,12 +107,14 @@ int get_amount(int share, int amount) inline {
 
             cell msg = begin_cell()
                 .store_uint(0x18, 6)
-                .store_slice(sender_address)
+                .store_slice(admin)
                 .store_coins(20000000)
                 .store_uint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
                 .store_uint(0x0f8a7ea5, 32)
                 .store_uint(query_id, 64)
                 .store_coins(jetton_amount)
+                .store_slice(addr)
+                .store_slice(addr)
                 .store_coins(1)
                 .end_cell();
             send_raw_message(msg, 1);
