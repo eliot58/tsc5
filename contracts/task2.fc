@@ -115,7 +115,6 @@ int get_amount(int share, int amount) inline {
                 .store_uint(0x0f8a7ea5, 32)
                 .store_uint(query_id, 64)
                 .store_coins(jetton_amount)
-                .store_ref(body)
                 .store_slice(addr)
                 .store_slice(addr)
                 .store_uint(0, 1)
