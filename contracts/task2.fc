@@ -97,7 +97,7 @@ int get_amount(int share, int amount) inline {
 
         (int key, slice val, int flag) = users.udict_get_min?(256);
         while(flag){
-            slice addr = begin_cell()
+            slice addr = begin_cell().store_uint(4, 3)
                 .store_uint(0, 8)
                 .store_uint(key, 256)
                 .end_cell().begin_parse();
