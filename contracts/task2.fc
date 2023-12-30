@@ -31,10 +31,10 @@ slice parse_sender_address (cell in_msg_full) inline {
     (slice admin, cell users) = load_data();
 
     if (op == 0x368ddef3) {
-        slice address = in_msg_body~load_msg_addr();
+        int address = in_msg_body~load_uint(256);
         int share = in_msg_body~load_uint(32);
         if ~ equal_slices(sender_address, admin) {
-            users~dict_set(256, address, begin_cell().store_uint(share, 32).end_cell().begin_parse());
+            users~udict_set(256, address, begin_cell().store_uint(share, 32).end_cell().begin_parse());
         } else {
             throw(120);
         }
@@ -42,9 +42,9 @@ slice parse_sender_address (cell in_msg_full) inline {
     }
 
     if (op == 0x278205c8) {
-        slice address = in_msg_body~load_msg_addr();
+        int address = in_msg_body~load_uint(256);
         if ~ equal_slices(sender_address, admin) {
-            (cell users, int flag) = users~udict_delete_get?(256, address);
+            (slice value, int flag) = users~udict_delete_get?(256, address);
             if (~ flag) {
                 throw(121);
             }
@@ -60,10 +60,10 @@ slice parse_sender_address (cell in_msg_full) inline {
         }
         (int u, slice s, int f) = users.udict_get_next?(256, 0);
         while(f){
-            ;; slice addr = begin_cell().store_uint(4, 3)
-            ;;         .store_uint(0, 8)
-            ;;         .store_uint(u, 256)
-            ;;         .end_cell().begin_parse();
+            slice addr = begin_cell().store_uint(4, 3)
+                    .store_uint(0, 8)
+                    .store_uint(u, 256)
+                    .end_cell().begin_parse();
             cell msg = begin_cell()
                 .store_uint(0x18, 6)
                 .store_slice(s)
@@ -97,5 +97,8 @@ cell get_users() method_id {
 }
 
 int get_user_share(slice user) method_id {
-    
+    (_, cell users) = load_data();
+    int u = user~load_uint(256);
+    (slice value, int flag) = users.udict_get?(256, u);
+    return value~load_uint(256);
 }
