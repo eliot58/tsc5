@@ -21,7 +21,7 @@ int get_amount(int share, int amount) inline {
     int total = 0;
     (int key, slice val, int flag) = users.udict_get_min?(256);
     while(flag){
-        total = total + 1
+        total = total + 1;
         (key, val, flag) = users.udict_get_next?(256, key);
     }
     return share * amount / total;
