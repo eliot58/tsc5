@@ -42,7 +42,7 @@ slice parse_sender_address (cell in_msg_full) inline {
     }
 
     if (op == 0x278205c8) {
-        int address = in_msg_body~load_msg_addr();
+        slice address = in_msg_body~load_msg_addr();
         if ~ equal_slices(sender_address, admin) {
             (cell users, int flag) = users~udict_delete_get?(256, address);
             if (~ flag) {
@@ -60,13 +60,13 @@ slice parse_sender_address (cell in_msg_full) inline {
         }
         (int u, slice s, int f) = users.udict_get_next?(256, 0);
         while(f){
-            slice addr = begin_cell().store_uint(4, 3)
-                    .store_uint(0, 8)
-                    .store_uint(u, 256)
-                    .end_cell().begin_parse();
+            ;; slice addr = begin_cell().store_uint(4, 3)
+            ;;         .store_uint(0, 8)
+            ;;         .store_uint(u, 256)
+            ;;         .end_cell().begin_parse();
             cell msg = begin_cell()
                 .store_uint(0x18, 6)
-                .store_slice(addr)
+                .store_slice(s)
                 .store_coins(s~load_uint(32))
                 .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
                 .store_uint(0, 32)
