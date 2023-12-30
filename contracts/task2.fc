@@ -21,7 +21,7 @@ int get_amount(int share, int amount) inline {
     int total = 0;
     (int key, slice val, int flag) = users.udict_get_min?(256);
     while(flag){
-        total = total + val~load_uint(32);
+        total = total + 1
         (key, val, flag) = users.udict_get_next?(256, key);
     }
     return share * amount / total;
@@ -65,7 +65,6 @@ int get_amount(int share, int amount) inline {
     }
 
     if (op == 0x068530b3) {
-        throw_if(120, ~ equal_slices(admin, sender_address));
         if (users.dict_empty?()) {
             throw(122);
         }
@@ -90,7 +89,6 @@ int get_amount(int share, int amount) inline {
     }
 
     if (op == 0x7362d09c) {
-        throw_if(120, ~ equal_slices(admin, sender_address));
         if (users.dict_empty?()) {
             throw(122);
         }
