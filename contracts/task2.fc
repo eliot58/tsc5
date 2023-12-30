@@ -16,18 +16,21 @@ int equal_slices (slice a, slice b) asm "SDEQ";
     set_data(begin_cell().store_slice(admin).store_dict(users).end_cell());
 }
 
-slice parse_sender_address (cell in_msg_full) inline {
-  var cs = in_msg_full.begin_parse();
-  var flags = cs~load_uint(4);
-  slice sender_address = cs~load_msg_addr();
-  return sender_address;
-}
 
 () recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
+    if (in_msg_body.slice_empty?()) {
+		return ();
+	}
+	slice cs = in_msg_full.begin_parse();
+	int flags = cs~load_uint(4);
+
+	if (flags & 1) {
+		return ();
+	}
+	slice sender_address = cs~load_msg_addr();
+
     int op = in_msg_body~load_uint(32);
 	int query_id = in_msg_body~load_uint(64);
-
-    slice sender_address = parse_sender_address(in_msg_full);
     (slice admin, cell users) = load_data();
 
     if (op == 0x368ddef3) {
@@ -77,6 +80,17 @@ slice parse_sender_address (cell in_msg_full) inline {
     if (op == 0x7362d09c) {
         if (users.dict_empty?()) {
             throw(122);
+        }
+
+        int amount = in_msg_body~load_coins();
+
+        (int key, slice val, int flag) = users.udict_get_min?(256);
+        while(flag){
+            slice addr = begin_cell()
+                .store_uint(0, 8)
+                .store_uint(key, 256)
+                .end_cell().begin_parse();
+            
         }
 
     }
