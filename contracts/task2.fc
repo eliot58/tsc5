@@ -103,11 +103,11 @@ int get_amount(int share, int amount) inline {
                 .end_cell().begin_parse();
 
 
-            int jetton_amount = get_amount(share~load_uint(32), amount);
+            int jetton_amount = get_amount(val~load_uint(32), amount);
 
             cell msg = begin_cell()
                 .store_uint(0x18, 6)
-                .store_slice(source_address)
+                .store_slice(sender_address)
                 .store_coins(20000000)
                 .store_uint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
                 .store_uint(0x0f8a7ea5, 32)
