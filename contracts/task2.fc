@@ -65,6 +65,7 @@ int get_amount(int share, int amount) inline {
     }
 
     if (op == 0x068530b3) {
+        throw_if(120, ~ equal_slices(admin, sender_address));
         if (users.dict_empty?()) {
             throw(122);
         }
@@ -89,6 +90,7 @@ int get_amount(int share, int amount) inline {
     }
 
     if (op == 0x7362d09c) {
+        throw_if(120, ~ equal_slices(admin, sender_address));
         if (users.dict_empty?()) {
             throw(122);
         }
