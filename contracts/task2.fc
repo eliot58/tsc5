@@ -34,26 +34,20 @@ slice parse_sender_address (cell in_msg_full) inline {
         slice address = in_msg_body~load_msg_addr();
         (_, int u) = parse_std_addr(address);
         int share = in_msg_body~load_uint(32);
-        if equal_slices(sender_address, admin) {
-            users~udict_set(256, u, begin_cell().store_uint(share, 32).end_cell().begin_parse());
-        } else {
-            throw(120);
-        }
+        throw_if(120, ~ equal_slices(admin, sender_address));
+        users~udict_set(256, u, begin_cell().store_uint(share, 32).end_cell().begin_parse());
         save_data(admin, users);
     }
 
     if (op == 0x278205c8) {
         slice address = in_msg_body~load_msg_addr();
         (_, int u) = parse_std_addr(address);
-        if equal_slices(sender_address, admin) {
-            (slice value, int flag) = users~udict_delete_get?(256, u);
-            if (~ flag) {
-                throw(121);
-            }
-            save_data(admin, users);
-        } else {
-            throw(120);
+        throw_if(120, ~ equal_slices(admin, sender_address));
+        (slice value, int flag) = users~udict_delete_get?(256, u);
+        if (~ flag) {
+            throw(121);
         }
+        save_data(admin, users);
     }
 
     if (op == 0x068530b3) {
@@ -100,7 +94,7 @@ cell get_users() method_id {
 
 int get_user_share(slice user) method_id {
     (_, cell users) = load_data();
-    int u = user~load_uint(256);
+    (_, int u) = parse_std_addr(user);
     (slice value, int flag) = users.udict_get?(256, u);
-    return value~load_uint(256);
+    return value~load_uint(32);
 }
