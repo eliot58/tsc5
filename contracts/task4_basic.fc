@@ -6,6 +6,8 @@ forall X -> (tuple, (X)) pop_back (tuple t) asm "UNCONS";
 forall X -> (tuple, X) ~tpop (tuple t) asm "TPOP";
 (int) tlen (tuple t) asm "TLEN";
 forall X -> (tuple) to_tuple (X x) asm "NOP";
+forall X -> tuple tuples::tsetq(tuple t, int k, X x) asm(t x k) "SETINDEXVARQ";
+forall X -> (tuple, ()) ~tsetq(tuple t, int k, X x) asm(t x k) "SETINDEXVARQ";
 
 () recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
 
@@ -32,7 +34,7 @@ int toIndex(int a, int b) inline {
         while (j < m) {
             slice s = maze.at(i).at(j);
             if (s~load_uint(8) == 83) {
-                stack~push_back(triple(i, j, null()));
+                stack~push_back(triple(i, j, empty_tuple()));
                 i = 33;
                 j = 33;
             }
@@ -46,7 +48,11 @@ int toIndex(int a, int b) inline {
         slice s = maze.at(i).at(j);
 
         if (s~load_uint(8) == 69) {
-            return (-1, 0, 0, path);
+            int k = 1;
+            while (k < s.tlen()) {
+                maze.at(path.at(k).at(0))~tsetq(path.at(k).at(1), begin_cell().store_uint(33, 8).end_cell().begin_parse());
+            }
+            return (-1, 0, 0, maze);
         }
 
         int index = toIndex(i, j);
@@ -58,7 +64,7 @@ int toIndex(int a, int b) inline {
             if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
                 slice s = maze.at(new_i).at(new_j);
                 if (s~load_uint(8) != 88) {
-                    path~push_back(pair(i, j));
+                    path~tpush(pair(i, j));
                     stack~push_back(triple(new_i, new_j, path));
                 }
             }
@@ -67,7 +73,7 @@ int toIndex(int a, int b) inline {
             if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
                 slice s = maze.at(new_i).at(new_j);
                 if (s~load_uint(8) != 88) {
-                    path~push_back(pair(i, j));
+                    path~tpush(pair(i, j));
                     stack~push_back(triple(new_i, new_j, path));
                 }
             }
@@ -76,7 +82,7 @@ int toIndex(int a, int b) inline {
             if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
                 slice s = maze.at(new_i).at(new_j);
                 if (s~load_uint(8) != 88) {
-                    path~push_back(pair(i, j));
+                    path~tpush(pair(i, j));
                     stack~push_back(triple(new_i, new_j, path));
                 }
             }
@@ -85,7 +91,7 @@ int toIndex(int a, int b) inline {
             if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
                 slice s = maze.at(new_i).at(new_j);
                 if (s~load_uint(8) != 88) {
-                    path~push_back(pair(i, j));
+                    path~tpush(pair(i, j));
                     stack~push_back(triple(new_i, new_j, path));
                 }
             }
@@ -94,7 +100,7 @@ int toIndex(int a, int b) inline {
             if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
                 slice s = maze.at(new_i).at(new_j);
                 if (s~load_uint(8) != 88) {
-                    path~push_back(pair(i, j));
+                    path~tpush(pair(i, j));
                     stack~push_back(triple(new_i, new_j, path));
                 }
             }
@@ -103,7 +109,7 @@ int toIndex(int a, int b) inline {
             if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
                 slice s = maze.at(new_i).at(new_j);
                 if (s~load_uint(8) != 88) {
-                    path~push_back(pair(i, j));
+                    path~tpush(pair(i, j));
                     stack~push_back(triple(new_i, new_j, path));
                 }
             }
@@ -112,7 +118,7 @@ int toIndex(int a, int b) inline {
             if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
                 slice s = maze.at(new_i).at(new_j);
                 if (s~load_uint(8) != 88) {
-                    path~push_back(pair(i, j));
+                    path~tpush(pair(i, j));
                     stack~push_back(triple(new_i, new_j, path));
                 }
             }
@@ -121,7 +127,7 @@ int toIndex(int a, int b) inline {
             if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
                 slice s = maze.at(new_i).at(new_j);
                 if (s~load_uint(8) != 88) {
-                    path~push_back(pair(i, j));
+                    path~tpush(pair(i, j));
                     stack~push_back(triple(new_i, new_j, path));
                 }
             }
