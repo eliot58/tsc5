@@ -25,7 +25,7 @@ int toIndex(int a, int b) inline {
 
 
 (int, int, int, tuple) solve(int n, int m, tuple maze) method_id {
-    tuple moves = to_tuple([[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]);
+    ;; tuple moves = to_tuple([[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]);
     cell visited = new_dict();
     tuple stack = null();
     int i = 0;
