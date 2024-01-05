@@ -1,5 +1,14 @@
 #include "imports/stdlib.fc";
 
+forall X -> int is_null (X x) asm "ISNULL";
+forall X -> (tuple, ()) push_back (tuple tail, X head) asm "CONS";
+forall X -> (tuple, (X)) pop_back (tuple t) asm "UNCONS";
+forall X -> (tuple, X) ~tpop (tuple t) asm "TPOP";
+(int) tlen (tuple t) asm "TLEN";
+forall X -> (tuple) to_tuple (X x) asm "NOP";
+forall X -> tuple tuples::tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
+forall X -> (tuple, ()) ~tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
+
 () recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
 
 }
