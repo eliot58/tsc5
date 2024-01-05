@@ -6,8 +6,8 @@ forall X -> (tuple, (X)) pop_back (tuple t) asm "UNCONS";
 forall X -> (tuple, X) ~tpop (tuple t) asm "TPOP";
 (int) tlen (tuple t) asm "TLEN";
 forall X -> (tuple) to_tuple (X x) asm "NOP";
-forall X -> tuple tuples::tsetq(tuple t, int k, X x) asm(t x k) "SETINDEXVARQ";
-forall X -> (tuple, ()) ~tsetq(tuple t, int k, X x) asm(t x k) "SETINDEXVARQ";
+forall X -> tuple tuples::tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
+forall X -> (tuple, ()) ~tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
 
 () recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
 
@@ -50,7 +50,7 @@ int toIndex(int a, int b) inline {
         if (s~load_uint(8) == 69) {
             int k = 1;
             while (k < path.tlen()) {
-                maze.at(path.at(k).at(0)).tuples::tsetq(path.at(k).at(1), begin_cell().store_uint(33, 8).end_cell().begin_parse());
+                maze.at(path.at(k).at(0)).tuples::tset(path.at(k).at(1), begin_cell().store_uint(33, 8).end_cell().begin_parse());
             }
             return (-1, 0, 0, maze);
         }
