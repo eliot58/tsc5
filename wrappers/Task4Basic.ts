@@ -26,4 +26,28 @@ export class Task4Basic implements Contract {
             body: beginCell().endCell(),
         });
     }
+
+    async getSolve(provider: ContractProvider){
+        const result = await provider.get("solve", [{ type: 'int', value: BigInt(8) }, 
+        { type: 'int', value: BigInt(5) }, 
+        { type: 'tuple', items: [
+
+        { type: 'tuple', items: [{ type: "slice", cell: beginCell().storeUint(83, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(88, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(63, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(88, 8).endCell()}]},
+
+        { type: 'tuple', items: [{ type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(88, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(88, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(88, 8).endCell()}]},
+
+        { type: 'tuple', items: [{ type: "slice", cell: beginCell().storeUint(88, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(63, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}]},
+
+        { type: 'tuple', items: [{ type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(63, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(63, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}]},
+
+        { type: 'tuple', items: [{ type: "slice", cell: beginCell().storeUint(88, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(63, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}]},
+
+        { type: 'tuple', items: [{ type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(88, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(88, 8).endCell()}]},
+
+        { type: 'tuple', items: [{ type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(63, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}]},
+
+        { type: 'tuple', items: [{ type: "slice", cell: beginCell().storeUint(88, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(46, 8).endCell()}, { type: "slice", cell: beginCell().storeUint(69, 8).endCell()}]}
+    ]}])
+        return result.stack;
+    }
 }
