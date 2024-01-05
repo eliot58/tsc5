@@ -47,7 +47,7 @@ forall X -> (tuple, ()) ~tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
 
         slice visit = visited.at(i).at(j);
         if (visit~load_uint(8) != 33) {
-            visited = visited.tuples::tset(i, visited.at(i).tuples::tset(j, begin_cell().load_uint(33, 8).end_cell().begin_parse()));
+            visited = visited.tuples::tset(i, visited.at(i).tuples::tset(j, begin_cell().store_uint(33, 8).end_cell().begin_parse()));
             ;; visited.udict_set(256, index, begin_cell().end_cell().begin_parse());
 
 
