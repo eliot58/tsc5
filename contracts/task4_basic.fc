@@ -25,7 +25,7 @@ int toIndex(int a, int b) inline {
 
 
 (int, int, int, tuple) solve(int n, int m, tuple maze) method_id {
-    ;; tuple moves = to_tuple([[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]);
+    tuple moves = to_tuple([[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]);
     cell visited = new_dict();
     tuple stack = null();
     int i = 0;
@@ -60,77 +60,22 @@ int toIndex(int a, int b) inline {
         if (~ flag) {
             visited.udict_set(256, index, begin_cell().end_cell().begin_parse());
 
-            (int new_i, int new_j) = (i + 1, j + 0);
-            if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
-                slice s = maze.at(new_i).at(new_j);
-                if (s~load_uint(8) != 88) {
-                    path~tpush(pair(i, j));
-                    stack~push_back(triple(new_i, new_j, path));
+
+            int mv = 0;
+            while (mv < 8) {
+                (int new_i, int new_j) = (i + moves.at(mv).at(0), j + moves.at(mv).at(1));
+                if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
+                    slice s = maze.at(new_i).at(new_j);
+                    if (s~load_uint(8) != 88) {
+                        path~tpush(pair(i, j));
+                        stack~push_back(triple(new_i, new_j, path));
+                    }
                 }
+
+                mv += 1;
             }
 
-            (int new_i, int new_j) = (i - 1, j + 0);
-            if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
-                slice s = maze.at(new_i).at(new_j);
-                if (s~load_uint(8) != 88) {
-                    path~tpush(pair(i, j));
-                    stack~push_back(triple(new_i, new_j, path));
-                }
-            }
-
-            (int new_i, int new_j) = (i + 0, j + 1);
-            if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
-                slice s = maze.at(new_i).at(new_j);
-                if (s~load_uint(8) != 88) {
-                    path~tpush(pair(i, j));
-                    stack~push_back(triple(new_i, new_j, path));
-                }
-            }
-
-            (int new_i, int new_j) = (i + 0, j - 1);
-            if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
-                slice s = maze.at(new_i).at(new_j);
-                if (s~load_uint(8) != 88) {
-                    path~tpush(pair(i, j));
-                    stack~push_back(triple(new_i, new_j, path));
-                }
-            }
-
-            (int new_i, int new_j) = (i + 1, j + 1);
-            if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
-                slice s = maze.at(new_i).at(new_j);
-                if (s~load_uint(8) != 88) {
-                    path~tpush(pair(i, j));
-                    stack~push_back(triple(new_i, new_j, path));
-                }
-            }
-
-            (int new_i, int new_j) = (i + 1, j - 1);
-            if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
-                slice s = maze.at(new_i).at(new_j);
-                if (s~load_uint(8) != 88) {
-                    path~tpush(pair(i, j));
-                    stack~push_back(triple(new_i, new_j, path));
-                }
-            }
-
-            (int new_i, int new_j) = (i - 1, j + 1);
-            if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
-                slice s = maze.at(new_i).at(new_j);
-                if (s~load_uint(8) != 88) {
-                    path~tpush(pair(i, j));
-                    stack~push_back(triple(new_i, new_j, path));
-                }
-            }
-
-            (int new_i, int new_j) = (i - 1, j - 1);
-            if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
-                slice s = maze.at(new_i).at(new_j);
-                if (s~load_uint(8) != 88) {
-                    path~tpush(pair(i, j));
-                    stack~push_back(triple(new_i, new_j, path));
-                }
-            }
+            
         }
     }
 
