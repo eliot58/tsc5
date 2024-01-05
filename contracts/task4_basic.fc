@@ -49,7 +49,7 @@ int toIndex(int a, int b) inline {
 
         if (s~load_uint(8) == 69) {
             int k = 1;
-            while (k < s.tlen()) {
+            while (k < path.tlen()) {
                 maze.at(path.at(k).at(0))~tsetq(path.at(k).at(1), begin_cell().store_uint(33, 8).end_cell().begin_parse());
             }
             return (-1, 0, 0, maze);
