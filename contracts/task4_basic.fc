@@ -13,20 +13,10 @@ forall X -> (tuple, ()) ~tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
 
 }
 
-int toIndex(int a, int b) inline {
-    int res = 0;
-    if (b < 10) {
-        res = a * 10 + b;
-    } elseif ((b >= 10) & (b < 100)){
-        res = a * 100 + b;
-    }
-    return res;
-}
-
 
 (int, int, int, tuple) solve(int n, int m, tuple maze) method_id {
     tuple moves = to_tuple([[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]);
-    cell visited = new_dict();
+    tuple visited = maze;
     tuple stack = null();
     int i = 0;
     while (i < n){
@@ -55,10 +45,10 @@ int toIndex(int a, int b) inline {
             return (-1, 0, 0, maze);
         }
 
-        int index = toIndex(i, j);
-        (slice val, int flag) = visited.udict_get?(256, index);
-        if (~ flag) {
-            visited.udict_set(256, index, begin_cell().end_cell().begin_parse());
+        slice visit = visited.at(i).at(j);
+        if (visit~load_uint(8) != 33) {
+            visited = visited.tuples::tset(i, visited.at(i).tuples::tset(j, begin_cell().load_uint(33, 8).end_cell().begin_parse()));
+            ;; visited.udict_set(256, index, begin_cell().end_cell().begin_parse());
 
 
             int mv = 0;
@@ -78,8 +68,6 @@ int toIndex(int a, int b) inline {
             
         }
     }
-
-    ;; maze.at(0).tuples::tset(0, begin_cell().store_uint(33, 8).end_cell().begin_parse());
 
     return (-1, 0, 0, null());
 }

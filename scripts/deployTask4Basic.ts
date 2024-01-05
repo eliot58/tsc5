@@ -11,5 +11,5 @@ export async function run(provider: NetworkProvider) {
 
     let stack = await task4Basic.getSolve()
 
-    console.log(stack.readNumber(), stack.readNumber(), stack.readNumber(), stack.readTuple())
+    console.log(stack.readNumber(), stack.readNumber(), stack.readNumber(), stack.readTuple().readTuple().readCell().beginParse().loadUint(8))
 }
