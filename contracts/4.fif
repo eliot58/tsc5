@@ -1,19 +1,14 @@
-#include "imports/stdlib.fc";
-
-forall X -> int is_null (X x) asm "ISNULL";
-forall X -> (tuple, ()) push_back (tuple tail, X head) asm "CONS";
-forall X -> (tuple, (X)) pop_back (tuple t) asm "UNCONS";
-forall X -> (tuple, X) ~tpop (tuple t) asm "TPOP";
-(int) tlen (tuple t) asm "TLEN";
-forall X -> (tuple) to_tuple (X x) asm "NOP";
-forall X -> tuple tuples::tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
-forall X -> (tuple, ()) ~tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
-
-() recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
-
-}
-
-(int, int, int, tuple) solution(int n, int m, tuple maze) asm """
+"Asm.fif" include
+// automatically generated from `imports/stdlib.fc` `task4_basic.fc` 
+PROGRAM{
+  DECLPROC recv_internal
+  69278 DECLMETHOD solve
+  recv_internal PROC:<{
+    //  my_balance msg_value in_msg_full in_msg_body
+    4 BLKDROP	// 
+  }>
+  solve PROC:<{
+    //  n m maze
     1 PUSHINT	//  n m maze _6=1
     0 PUSHINT	//  n m maze _6=1 _7=0
     PAIR	//  n m maze _5
@@ -287,11 +282,6 @@ forall X -> (tuple, ()) ~tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
     8 BLKDROP	//  maze
     -1 PUSHINT	//  maze _198=-1
     0 PUSHINT	//  maze _198=-1 _199=0
-    s0 s1 s2 XCPUXC	
-""";
-
-
-
-(int, int, int, tuple) solve(int n, int m, tuple maze) method_id {
-    return solution(n,m,maze);
-}
+    s0 s1 s2 XCPUXC	//  _198=-1 _199=0 _200=0 maze
+  }>
+}END>c
