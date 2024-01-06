@@ -27,6 +27,7 @@ int get_amount(int share, int amount) inline {
     if (in_msg_body.slice_empty?()) {
     return ();
   }
+  slice cs = in_msg_full.begin_parse();
   slice sender_address = cs~load_msg_addr();
 
     int op = in_msg_body~load_uint(32);
