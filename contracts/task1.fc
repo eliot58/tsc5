@@ -1,133 +1,67 @@
 #include "imports/stdlib.fc";
 
-(int, int, slice, int) load_data () inline asm """
-// 
-    c4 PUSH	//  _1
-    CTOS	//  ds
-    8 PUSHPOW2	//  ds _4=256
-    LDUX	//  _3 ds
-    32 PUSHINT	//  _3 ds _7=32
-    LDUX	//  _3 _6 ds
-    LDMSGADDR	//  _3 _6 _9 ds
-    32 PUSHINT	//  _3 _6 _9 ds _12=32
-    LDUX	//  _3 _6 _9 _21 _20
-    DROP	//  _3 _6 _9 _11
-""";
+(int, int, slice, int) load_data () inline {
+    var ds = get_data().begin_parse();
+    return (ds~load_uint(256), ds~load_uint(32), ds~load_msg_addr(), ds~load_uint(32));
+}
 
-() save_data (int public_key, int execution_time, slice receiver, int seqno) impure inline asm """
-//  public_key execution_time receiver seqno
-    s0 s3 XCHG
-    NEWC	//  seqno execution_time receiver public_key _4
-    256 STU	//  seqno execution_time receiver _6
-    s1 s2 XCHG	//  seqno receiver execution_time _6
-    32 STU	//  seqno receiver _8
-    SWAP	//  seqno _8 receiver
-    STSLICER	//  seqno _9
-    32 STU	//  _11
-    ENDC	//  _12
-    c4 POP
-""";
+() save_data (int public_key, int execution_time, slice receiver, int seqno) impure inline {
+    set_data(begin_cell().store_uint(public_key, 256).store_uint(execution_time, 32).store_slice(receiver).store_uint(seqno, 32).end_cell());
+}
 
 () recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
 }
 
-() recv_external(slice in_msg) impure asm """
-//  in_msg
-    32 PUSHINT	//  in_msg _3=32
-    LDUX	//  op in_msg
-    64 PUSHINT	//  op in_msg _7=64
-    LDUX	//  op _99 _98
-    NIP	//  op in_msg
-    load_data INLINECALLDICT	//  op in_msg public_key execution_time receiver seqno
-    s5 PUSH
-    2649817719 PUSHINT	//  op in_msg public_key execution_time receiver seqno op _14=2649817719
-    EQUAL	//  op in_msg public_key execution_time receiver seqno _15
-    IF:<{	//  op in_msg public_key execution_time receiver seqno
-      s0 s4 XCHG
-      9 PUSHPOW2	//  op seqno public_key execution_time receiver in_msg _18=512
-      LDSLICEX	//  op seqno public_key execution_time receiver signature in_msg
-      LDREF	//  op seqno public_key execution_time receiver signature _107 _106
-      DROP	//  op seqno public_key execution_time receiver signature body
-      DUP	//  op seqno public_key execution_time receiver signature body body
-      HASHCU	//  op seqno public_key execution_time receiver signature body hash
-      SWAP	//  op seqno public_key execution_time receiver signature hash body
-      CTOS	//  op seqno public_key execution_time receiver signature hash s
-      32 PUSHINT	//  op seqno public_key execution_time receiver signature hash s _29=32
-      LDUX	//  op seqno public_key execution_time receiver signature hash locked_for s
-      32 PUSHINT	//  op seqno public_key execution_time receiver signature hash locked_for s _33=32
-      LDUX	//  op seqno public_key execution_time receiver signature hash locked_for _111 _110
-      DROP	//  op seqno public_key execution_time receiver signature hash locked_for new_seqno
-      s0 s7 XCHG	//  op new_seqno public_key execution_time receiver signature hash locked_for seqno
-      INC	//  op new_seqno public_key execution_time receiver signature hash locked_for _36
-      s7 s(-1) PUXC	//  op new_seqno public_key execution_time receiver signature hash locked_for new_seqno _36
-      NEQ	//  op new_seqno public_key execution_time receiver signature hash locked_for _37
-      IF:<{	//  op new_seqno public_key execution_time receiver signature hash locked_for
-        119 THROW
-      }>	//  op new_seqno public_key execution_time receiver signature hash locked_for
-      s2 s5 XCPU	//  op new_seqno public_key execution_time receiver locked_for hash signature public_key
-      CHKSIGNU	//  op new_seqno public_key execution_time receiver locked_for _41
-      120 THROWIFNOT
-      DUP	//  op new_seqno public_key execution_time receiver locked_for locked_for
-      1 LESSINT	//  op new_seqno public_key execution_time receiver locked_for _44
-      IF:<{	//  op new_seqno public_key execution_time receiver locked_for
-        121 THROW
-      }>	//  op new_seqno public_key execution_time receiver locked_for
-      s2 PUSH
-      NOW	//  op new_seqno public_key execution_time receiver locked_for execution_time _47
-      LESS	//  op new_seqno public_key execution_time receiver locked_for _48
-      IF:<{	//  op new_seqno public_key execution_time receiver locked_for
-        122 THROW
-      }>	//  op new_seqno public_key execution_time receiver locked_for
-      NOW	//  op new_seqno public_key execution_time receiver locked_for _51
-      OVER	//  op new_seqno public_key execution_time receiver locked_for _51 locked_for
-      ADD	//  op new_seqno public_key execution_time receiver locked_for _52
-      s3 PUSH	//  op new_seqno public_key execution_time receiver locked_for _52 execution_time
-      LEQ	//  op new_seqno public_key execution_time receiver locked_for _53
-      IF:<{	//  op new_seqno public_key execution_time receiver locked_for
-        123 THROW
-      }>	//  op new_seqno public_key execution_time receiver locked_for
-      ACCEPT
-      NOW	//  op new_seqno public_key execution_time receiver locked_for _57
-      SWAP	//  op new_seqno public_key execution_time receiver _57 locked_for
-      ADD	//  op new_seqno public_key execution_time receiver _58
-      s3 s0 s0 XCHG3
-      s0 s4 PUXC	//  op receiver execution_time public_key _58 receiver new_seqno
-      save_data INLINECALLDICT
-      SWAP	//  op execution_time receiver
-    }>ELSE<{
-      DROP
-      2 2 BLKDROP2	//  op execution_time receiver
-    }>
-    s0 s2 XCHG
-    3142312500 PUSHINT	//  receiver execution_time op _60=3142312500
-    EQUAL	//  receiver execution_time _61
-    IF:<{	//  receiver execution_time
-      NOW	//  receiver execution_time _62
-      SWAP	//  receiver _62 execution_time
-      LESS	//  receiver _63
-      IF:<{	//  receiver
-        124 THROW
-      }>	//  receiver
-      ACCEPT
-      0 PUSHINT	//  receiver _68=0
-      DUP	//  receiver _68=0 _69=0
-      24 PUSHINT	//  receiver _68=0 _69=0 _70=24
-      NEWC	//  receiver _68=0 _69=0 _70=24 _71
-      6 STU	//  receiver _68=0 _69=0 _73
-      s0 s3 XCHG2	//  _69=0 _68=0 _73 receiver
-      STSLICER	//  _69=0 _68=0 _74
-      OVER	//  _69=0 _68=0 _74 _75=0
-      STGRAMS	//  _69=0 _68=0 _76
-      s1 s2 XCHG	//  _68=0 _69=0 _76
-      107 STU	//  _68=0 _90
-      32 STU	//  _92
-      ENDC	//  msg
-      7 PUSHPOW2	//  msg _94=128
-      SENDRAWMSG
-    }>ELSE<{
-      2DROP	// 
-    }>
-""";
+() recv_external(slice in_msg) impure {
+    int op = in_msg~load_uint(32);
+	int query_id = in_msg~load_uint(64);
+
+    (int public_key, int execution_time, slice receiver, int seqno) = load_data();
+
+
+
+    if (op == 0x9df10277) {
+        slice signature = in_msg~load_bits(512);
+        cell body = in_msg~load_ref();
+        int hash = cell_hash(body);
+        slice s = body.begin_parse();
+        int locked_for = s~load_uint(32);
+        int new_seqno = s~load_uint(32);
+        if (new_seqno != seqno + 1) {
+            throw(119);
+        }
+        throw_unless(120, check_signature(hash, signature, public_key));
+        if (locked_for <= 0) {
+            throw(121);
+        }
+        if (execution_time < now()) {
+            throw(122);
+        }
+        if (now() + locked_for <= execution_time) {
+            throw(123);
+        }
+        accept_message();
+        save_data(public_key, now() + locked_for, receiver, new_seqno);
+    }
+
+    if (op == 0xbb4be234) {
+        if (now() < execution_time) {
+            throw(124);
+        }
+        ;; throw_if(124, now() < execution_time);
+        accept_message();
+        cell msg = begin_cell()
+            .store_uint(0x18, 6)
+            .store_slice(receiver)
+            .store_coins(0)
+            .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
+            .store_uint(0, 32)
+        .end_cell();
+        send_raw_message(msg, 128); 
+    }
+
+
+}
 
 int get_seqno() method_id {
     (_, _, _, int seqno) = load_data();

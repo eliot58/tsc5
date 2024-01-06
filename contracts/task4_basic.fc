@@ -13,285 +13,74 @@ forall X -> (tuple, ()) ~tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
 
 }
 
-(int, int, int, tuple) solution(int n, int m, tuple maze) asm """
-    1 PUSHINT	//  n m maze _6=1
-    0 PUSHINT	//  n m maze _6=1 _7=0
-    PAIR	//  n m maze _5
-    -1 PUSHINT	//  n m maze _5 _9=-1
-    0 PUSHINT	//  n m maze _5 _9=-1 _10=0
-    PAIR	//  n m maze _5 _8
-    0 PUSHINT	//  n m maze _5 _8 _12=0
-    1 PUSHINT	//  n m maze _5 _8 _12=0 _13=1
-    PAIR	//  n m maze _5 _8 _11
-    0 PUSHINT	//  n m maze _5 _8 _11 _15=0
-    -1 PUSHINT	//  n m maze _5 _8 _11 _15=0 _16=-1
-    PAIR	//  n m maze _5 _8 _11 _14
-    1 PUSHINT	//  n m maze _5 _8 _11 _14 _18=1
-    DUP	//  n m maze _5 _8 _11 _14 _18=1 _19=1
-    PAIR	//  n m maze _5 _8 _11 _14 _17
-    1 PUSHINT	//  n m maze _5 _8 _11 _14 _17 _21=1
-    -1 PUSHINT	//  n m maze _5 _8 _11 _14 _17 _21=1 _22=-1
-    PAIR	//  n m maze _5 _8 _11 _14 _17 _20
-    -1 PUSHINT	//  n m maze _5 _8 _11 _14 _17 _20 _24=-1
-    1 PUSHINT	//  n m maze _5 _8 _11 _14 _17 _20 _24=-1 _25=1
-    PAIR	//  n m maze _5 _8 _11 _14 _17 _20 _23
-    -1 PUSHINT	//  n m maze _5 _8 _11 _14 _17 _20 _23 _27=-1
-    DUP	//  n m maze _5 _8 _11 _14 _17 _20 _23 _27=-1 _28=-1
-    PAIR	//  n m maze _5 _8 _11 _14 _17 _20 _23 _26
-    8 TUPLE	//  n m maze moves
-    NIL	//  n m maze moves wave
-    PUSHNULL	//  n m maze moves wave stack
-    NIL	//  n m maze moves wave stack start_point
-    NIL	//  n m maze moves wave stack start_point end_point
-    0 PUSHINT	//  n m maze moves wave stack start_point end_point i=0
-    WHILE:<{
-      s0 s8 PUSH2	//  n m maze moves wave stack start_point end_point i i n
-      LESS	//  n m maze moves wave stack start_point end_point i _40
-    }>DO<{	//  n m maze moves wave stack start_point end_point i
-      0 PUSHINT	//  n m maze moves wave stack start_point end_point i j=0
-      NIL	//  n m maze moves wave stack start_point end_point i j=0 row
-      WHILE:<{
-        s1 s9 PUSH2	//  n m maze moves wave stack start_point end_point i j row j m
-        LESS	//  n m maze moves wave stack start_point end_point i j row _45
-      }>DO<{	//  n m maze moves wave stack start_point end_point i j row
-        -1 PUSHINT	//  n m maze moves wave stack start_point end_point i j row _47=-1
-        TPUSH	//  n m maze moves wave stack start_point end_point i j row
-        s8 s2 PUSH2	//  n m maze moves wave stack start_point end_point i j row maze i
-        INDEXVAR	//  n m maze moves wave stack start_point end_point i j row _50
-        s2 PUSH	//  n m maze moves wave stack start_point end_point i j row _50 j
-        INDEXVAR	//  n m maze moves wave stack start_point end_point i j row s
-        8 PUSHINT	//  n m maze moves wave stack start_point end_point i j row s _54=8
-        LDUX	//  n m maze moves wave stack start_point end_point i j row _202 _201
-        DROP	//  n m maze moves wave stack start_point end_point i j row char
-        DUP	//  n m maze moves wave stack start_point end_point i j row char char
-        83 EQINT	//  n m maze moves wave stack start_point end_point i j row char _57
-        IF:<{	//  n m maze moves wave stack start_point end_point i j row char
-          DROP
-          s4 POP	//  n m maze moves wave stack row end_point i j
-          2DUP	//  n m maze moves wave stack row end_point i j i j
-          PAIR	//  n m maze moves wave stack row end_point i j start_point
-        }>ELSE<{	//  n m maze moves wave stack start_point end_point i j row char
-          69 EQINT	//  n m maze moves wave stack start_point end_point i j row _61
-          IF:<{	//  n m maze moves wave stack start_point end_point i j row
-            s3 POP	//  n m maze moves wave stack start_point row i j
-            2DUP	//  n m maze moves wave stack start_point row i j i j
-            PAIR	//  n m maze moves wave stack start_point row i j end_point
-            s0 s3 XCHG	//  n m maze moves wave stack start_point end_point i j row
-          }>	//  n m maze moves wave stack start_point end_point i j row
-          s0 s4 XCHG	//  n m maze moves wave stack row end_point i j start_point
-        }>
-        SWAP	//  n m maze moves wave stack row end_point i start_point j
-        INC	//  n m maze moves wave stack row end_point i start_point j
-        s0 s4 XCHG2	//  n m maze moves wave stack start_point end_point i j row
-      }>	//  n m maze moves wave stack start_point end_point i j row
-      NIP	//  n m maze moves wave stack start_point end_point i row
-      s1 s5 XCHG	//  n m maze moves i stack start_point end_point wave row
-      TPUSH	//  n m maze moves i stack start_point end_point wave
-      s0 s4 XCHG	//  n m maze moves wave stack start_point end_point i
-      INC	//  n m maze moves wave stack start_point end_point i
-    }>	//  n m maze moves wave stack start_point end_point i
-    DROP	//  n m maze moves wave stack start_point end_point
-    OVER	//  n m maze moves wave stack start_point end_point start_point
-    FIRST	//  n m maze moves wave stack start_point end_point _71
-    s2 PUSH	//  n m maze moves wave stack start_point end_point _71 start_point
-    SECOND	//  n m maze moves wave stack start_point end_point _71 _72
-    0 PUSHINT	//  n m maze moves wave stack start_point end_point _71 _72 _73=0
-    TRIPLE	//  n m maze moves wave stack start_point end_point _74
-    s1 s3 XCHG	//  n m maze moves wave end_point start_point stack _74
-    CONS	//  n m maze moves wave end_point start_point stack
-    OVER	//  n m maze moves wave end_point start_point stack start_point
-    FIRST	//  n m maze moves wave end_point start_point stack _76
-    s4 s(-1) PUXC	//  n m maze moves wave end_point start_point stack wave _76
-    INDEXVAR	//  n m maze moves wave end_point start_point stack _77
-    0 PUSHINT	//  n m maze moves wave end_point start_point stack _77 _78=0
-    s3 PUSH	//  n m maze moves wave end_point start_point stack _77 _78=0 start_point
-    SECOND	//  n m maze moves wave end_point start_point stack _77 _78=0 _79
-    SETINDEXVAR	//  n m maze moves wave end_point start_point stack _80
-    s2 PUSH	//  n m maze moves wave end_point start_point stack _80 start_point
-    FIRST	//  n m maze moves wave end_point start_point stack _80 _81
-    s2 s5 XCHG	//  n m maze moves stack end_point start_point wave _80 _81
-    SETINDEXVAR	//  n m maze moves stack end_point start_point wave
-    WHILE:<{
-      s3 PUSH	//  n m maze moves stack end_point start_point wave stack
-      ISNULL	//  n m maze moves stack end_point start_point wave _83
-      NOT	//  n m maze moves stack end_point start_point wave _84
-    }>DO<{	//  n m maze moves stack end_point start_point wave
-      s0 s3 XCHG	//  n m maze moves wave end_point start_point stack
-      UNCONS	//  n m maze moves wave end_point start_point stack _88
-      UNTRIPLE	//  n m maze moves wave end_point start_point stack i j current_wave
-      0 PUSHINT	//  n m maze moves wave end_point start_point stack i j current_wave mv=0
-      WHILE:<{
-        DUP	//  n m maze moves wave end_point start_point stack i j current_wave mv mv
-        8 LESSINT	//  n m maze moves wave end_point start_point stack i j current_wave mv _94
-      }>DO<{	//  n m maze moves wave end_point start_point stack i j current_wave mv
-        s8 s0 PUSH2	//  n m maze moves wave end_point start_point stack i j current_wave mv moves mv
-        INDEXVAR	//  n m maze moves wave end_point start_point stack i j current_wave mv _97
-        0 INDEX	//  n m maze moves wave end_point start_point stack i j current_wave mv _99
-        s4 s(-1) PUXC	//  n m maze moves wave end_point start_point stack i j current_wave mv i _99
-        ADD	//  n m maze moves wave end_point start_point stack i j current_wave mv _100
-        s9 s1 PUSH2	//  n m maze moves wave end_point start_point stack i j current_wave mv _100 moves mv
-        INDEXVAR	//  n m maze moves wave end_point start_point stack i j current_wave mv _100 _101
-        1 INDEX	//  n m maze moves wave end_point start_point stack i j current_wave mv _100 _103
-        s4 s(-1) PUXC	//  n m maze moves wave end_point start_point stack i j current_wave mv _100 j _103
-        ADD	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j
-        OVER	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j new_i
-        -1 GTINT	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _106
-        s2 s14 PUSH2	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _106 new_i n
-        LESS	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _106 _107
-        AND	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _108
-        OVER	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _108 new_j
-        -1 GTINT	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _108 _110
-        AND	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _111
-        s1 s13 PUSH2	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _111 new_j m
-        LESS	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _111 _112
-        AND	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _113
-        IF:<{	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j
-          s11 s1 PUSH2	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j maze new_i
-          INDEXVAR	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _115
-          OVER	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _115 new_j
-          INDEXVAR	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j s
-          8 PUSHINT	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j s _118=8
-          LDUX	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _209 _208
-          DROP	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _117
-          88 NEQINT	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _121
-          IF:<{	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j
-            s9 s1 PUSH2	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j wave new_i
-            INDEXVAR	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _122
-            s4 PUSH	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _122 current_wave
-            INC	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _122 _124
-            s2 PUSH	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _122 _124 new_j
-            SETINDEXVAR	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j _125
-            s10 s0 s2 XC2PU	//  n m maze moves new_j end_point start_point stack i j current_wave mv new_i wave _125 new_i
-            SETINDEXVAR	//  n m maze moves new_j end_point start_point stack i j current_wave mv new_i wave
-            s9 s3 XCPU	//  n m maze moves wave end_point start_point stack i j current_wave mv new_i new_j current_wave
-            TRIPLE	//  n m maze moves wave end_point start_point stack i j current_wave mv _128
-            s1 s5 XCHG	//  n m maze moves wave end_point start_point mv i j current_wave stack _128
-            CONS	//  n m maze moves wave end_point start_point mv i j current_wave stack
-            s0 s4 XCHG	//  n m maze moves wave end_point start_point stack i j current_wave mv
-          }>ELSE<{
-            2DROP	//  n m maze moves wave end_point start_point stack i j current_wave mv
-          }>
-        }>ELSE<{
-          2DROP	//  n m maze moves wave end_point start_point stack i j current_wave mv
-        }>
-        INC	//  n m maze moves wave end_point start_point stack i j current_wave mv
-      }>	//  n m maze moves wave end_point start_point stack i j current_wave mv
-      4 BLKDROP	//  n m maze moves wave end_point start_point stack
-      s0 s3 XCHG	//  n m maze moves stack end_point start_point wave
-    }>	//  n m maze moves stack end_point start_point wave
-    s3 POP	//  n m maze moves wave end_point start_point
-    OVER	//  n m maze moves wave end_point start_point end_point
-    FIRST	//  n m maze moves wave end_point start_point _132
-    s3 s(-1) PUXC	//  n m maze moves wave end_point start_point wave _132
-    INDEXVAR	//  n m maze moves wave end_point start_point _133
-    s2 PUSH	//  n m maze moves wave end_point start_point _133 end_point
-    SECOND	//  n m maze moves wave end_point start_point _133 _134
-    INDEXVAR	//  n m maze moves wave end_point start_point _135
-    -1 EQINT	//  n m maze moves wave end_point start_point _137
-    IFJMP:<{	//  n m maze moves wave end_point start_point
-      7 BLKDROP	// 
-      -1 PUSHINT	//  _138=-1
-      0 PUSHINT	//  _138=-1 _139=0
-      DUP	//  _138=-1 _139=0 _140=0
-      PUSHNULL	//  _138=-1 _139=0 _140=0 _141
-    }>	//  n m maze moves wave end_point start_point
-    OVER	//  n m maze moves wave end_point start_point end_point
-    FIRST	//  n m maze moves wave end_point start_point _144
-    s2 PUSH	//  n m maze moves wave end_point start_point _144 end_point
-    SECOND	//  n m maze moves wave end_point start_point current_row current_col
-    WHILE:<{
-      s2 PUSH	//  n m maze moves wave end_point start_point current_row current_col start_point
-      FIRST	//  n m maze moves wave end_point start_point current_row current_col _146
-      s2 s(-1) PUXC	//  n m maze moves wave end_point start_point current_row current_col current_row _146
-      NEQ	//  n m maze moves wave end_point start_point current_row current_col _147
-      s3 PUSH	//  n m maze moves wave end_point start_point current_row current_col _147 start_point
-      SECOND	//  n m maze moves wave end_point start_point current_row current_col _147 _148
-      s2 s(-1) PUXC	//  n m maze moves wave end_point start_point current_row current_col _147 current_col _148
-      NEQ	//  n m maze moves wave end_point start_point current_row current_col _147 _149
-      AND	//  n m maze moves wave end_point start_point current_row current_col _150
-    }>DO<{	//  n m maze moves wave end_point start_point current_row current_col
-      s3 PUSH	//  n m maze moves wave end_point start_point current_row current_col end_point
-      FIRST	//  n m maze moves wave end_point start_point current_row current_col _151
-      s2 s(-1) PUXC	//  n m maze moves wave end_point start_point current_row current_col current_row _151
-      NEQ	//  n m maze moves wave end_point start_point current_row current_col _152
-      s4 PUSH	//  n m maze moves wave end_point start_point current_row current_col _152 end_point
-      SECOND	//  n m maze moves wave end_point start_point current_row current_col _152 _153
-      s2 s(-1) PUXC	//  n m maze moves wave end_point start_point current_row current_col _152 current_col _153
-      NEQ	//  n m maze moves wave end_point start_point current_row current_col _152 _154
-      AND	//  n m maze moves wave end_point start_point current_row current_col _155
-      IF:<{	//  n m maze moves wave end_point start_point current_row current_col
-        s6 s1 PUSH2	//  n m maze moves wave end_point start_point current_row current_col maze current_row
-        INDEXVAR	//  n m maze moves wave end_point start_point current_row current_col _156
-        33 PUSHINT	//  n m maze moves wave end_point start_point current_row current_col _156 _157=33
-        NEWC	//  n m maze moves wave end_point start_point current_row current_col _156 _157=33 _158
-        8 STU	//  n m maze moves wave end_point start_point current_row current_col _156 _160
-        ENDC	//  n m maze moves wave end_point start_point current_row current_col _156 _161
-        CTOS	//  n m maze moves wave end_point start_point current_row current_col _156 _162
-        s2 PUSH	//  n m maze moves wave end_point start_point current_row current_col _156 _162 current_col
-        SETINDEXVAR	//  n m maze moves wave end_point start_point current_row current_col _163
-        s7 s0 s2 XC2PU	//  n m current_col moves wave end_point start_point current_row maze _163 current_row
-        SETINDEXVAR	//  n m current_col moves wave end_point start_point current_row maze
-        s0 s6 XCHG	//  n m maze moves wave end_point start_point current_row current_col
-      }>	//  n m maze moves wave end_point start_point current_row current_col
-      0 PUSHINT	//  n m maze moves wave end_point start_point current_row current_col mv=0
-      WHILE:<{
-        DUP	//  n m maze moves wave end_point start_point current_row current_col mv mv
-        8 LESSINT	//  n m maze moves wave end_point start_point current_row current_col mv _168
-      }>DO<{	//  n m maze moves wave end_point start_point current_row current_col mv
-        s6 s0 PUSH2	//  n m maze moves wave end_point start_point current_row current_col mv moves mv
-        INDEXVAR	//  n m maze moves wave end_point start_point current_row current_col mv _171
-        0 INDEX	//  n m maze moves wave end_point start_point current_row current_col mv _173
-        s3 s(-1) PUXC	//  n m maze moves wave end_point start_point current_row current_col mv current_row _173
-        ADD	//  n m maze moves wave end_point start_point current_row current_col mv _174
-        s7 s1 PUSH2	//  n m maze moves wave end_point start_point current_row current_col mv _174 moves mv
-        INDEXVAR	//  n m maze moves wave end_point start_point current_row current_col mv _174 _175
-        1 INDEX	//  n m maze moves wave end_point start_point current_row current_col mv _174 _177
-        s3 s(-1) PUXC	//  n m maze moves wave end_point start_point current_row current_col mv _174 current_col _177
-        ADD	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j
-        OVER	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j new_i
-        -1 GTINT	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _180
-        s2 s12 PUSH2	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _180 new_i n
-        LESS	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _180 _181
-        AND	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _182
-        OVER	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _182 new_j
-        -1 GTINT	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _182 _184
-        AND	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _185
-        s1 s11 PUSH2	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _185 new_j m
-        LESS	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _185 _186
-        AND	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _187
-        IF:<{	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j
-          s7 s1 PUSH2	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j wave new_i
-          INDEXVAR	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _188
-          OVER	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _188 new_j
-          INDEXVAR	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _189
-          s8 s5 PUSH2	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _189 wave current_row
-          INDEXVAR	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _189 _190
-          s5 PUSH	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _189 _190 current_col
-          INDEXVAR	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _189 _191
-          DEC	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _189 _193
-          EQUAL	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j _194
-          IF:<{	//  n m maze moves wave end_point start_point current_row current_col mv new_i new_j
-            3 2 BLKDROP2
-            8 PUSHINT	//  n m maze moves wave end_point start_point current_row current_col mv=8
-          }>ELSE<{
-            2DROP	//  n m maze moves wave end_point start_point current_row current_col mv
-          }>
-        }>ELSE<{
-          2DROP	//  n m maze moves wave end_point start_point current_row current_col mv
-        }>
-        INC	//  n m maze moves wave end_point start_point current_row current_col mv
-      }>	//  n m maze moves wave end_point start_point current_row current_col mv
-      DROP	//  n m maze moves wave end_point start_point current_row current_col
-    }>	//  n m maze moves wave end_point start_point current_row current_col
-    s6 s8 XCHG
-    8 BLKDROP	//  maze
-    -1 PUSHINT	//  maze _198=-1
-    0 PUSHINT	//  maze _198=-1 _199=0
-    s0 s1 s2 XCPUXC	
-""";
-
-
 
 (int, int, int, tuple) solve(int n, int m, tuple maze) method_id {
-    return solution(n,m,maze);
+    tuple moves = to_tuple([[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]);
+    tuple wave = empty_tuple();
+    tuple stack = null();
+    tuple start_point = empty_tuple();
+    tuple end_point = empty_tuple();
+    int i = 0;
+    while (i < n){
+        int j = 0;
+        tuple row = empty_tuple();
+        while (j < m) {
+            row~tpush(-1);
+            slice s = maze.at(i).at(j);
+            int char = s~load_uint(8);
+            if (char == 83) {
+                start_point = to_tuple([i, j]);
+            } elseif (char == 69){
+                end_point = to_tuple([i, j]);
+            }
+            j += 1;
+        }
+        wave~tpush(row);
+        i += 1;
+    }
+    stack~push_back(triple(start_point.first(), start_point.second(), 0));
+    wave = wave.tuples::tset(start_point.first(), wave.at(start_point.first()).tuples::tset(start_point.second(), 0));
+
+    while (~ stack.is_null()){
+        (int i, int j, int current_wave) = untriple(stack~pop_back());
+        int mv = 0;
+        while (mv < 8) {
+            (int new_i, int new_j) = (i + moves.at(mv).at(0), j + moves.at(mv).at(1));
+            if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
+                slice s = maze.at(new_i).at(new_j);
+                if (s~load_uint(8) != 88) {
+                    wave = wave.tuples::tset(new_i, wave.at(new_i).tuples::tset(new_j, current_wave + 1));
+                    stack~push_back(triple(new_i, new_j, current_wave));
+                }
+            }
+            mv += 1;
+        }
+    }
+
+    if (wave.at(end_point.first()).at(end_point.second()) == -1){
+        return (-1, 0, 0, null());
+    }
+
+    (int current_row, int current_col) = (end_point.first(), end_point.second());
+
+    while ((current_row != start_point.first()) & (current_col != start_point.second())){
+        if ((current_row != end_point.first()) & (current_col != end_point.second())){
+            maze = maze.tuples::tset(current_row, maze.at(current_row).tuples::tset(current_col, begin_cell().store_uint(33, 8).end_cell().begin_parse()));
+        }
+        int mv = 0;
+        while (mv < 8) {
+            (int new_i, int new_j) = (current_row + moves.at(mv).at(0), current_col + moves.at(mv).at(1));
+            if ((0 <= new_i) & (new_i < n) & (0 <= new_j) & (new_j < m)){
+                if (wave.at(new_i).at(new_j) == wave.at(current_row).at(current_col) - 1) {
+                    current_row = new_i;
+                    current_col = new_j;
+                    mv = 8;
+                }
+            }
+            mv += 1;
+        }
+
+    }
+
+    return (-1, 0, 0, maze);
 }
