@@ -85,5 +85,5 @@ forall X -> (tuple, ()) ~tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
 
     }
 
-    return (-1, 0, l, maze);
+    return (-1, 1, 7, maze);
 }
