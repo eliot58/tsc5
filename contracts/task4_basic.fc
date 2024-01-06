@@ -63,6 +63,8 @@ forall X -> (tuple, ()) ~tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
 
     (int current_row, int current_col) = (end_point.first(), end_point.second());
 
+    int l = 0;
+
     while ((current_row != start_point.first()) & (current_col != start_point.second())){
         if ((current_row != end_point.first()) & (current_col != end_point.second())){
             maze = maze.tuples::tset(current_row, maze.at(current_row).tuples::tset(current_col, begin_cell().store_uint(33, 8).end_cell().begin_parse()));
@@ -74,6 +76,7 @@ forall X -> (tuple, ()) ~tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
                 if (wave.at(new_i).at(new_j) == wave.at(current_row).at(current_col) - 1) {
                     current_row = new_i;
                     current_col = new_j;
+                    l += 1;
                     mv = 8;
                 }
             }
@@ -82,5 +85,5 @@ forall X -> (tuple, ()) ~tset(tuple t, int k, X x) asm(t x k) "SETINDEXVAR";
 
     }
 
-    return (-1, 0, 0, maze);
+    return (-1, 0, l, maze);
 }
