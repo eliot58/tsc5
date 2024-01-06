@@ -30,9 +30,7 @@
         if (new_seqno != seqno + 1) {
             throw(119);
         }
-        if (~ check_signature(hash, signature, public_key)) {
-            throw(120);
-        }
+        throw_unless(120, check_signature(hash, signature, public_key));
         if (locked_for <= 0) {
             throw(121);
         }
