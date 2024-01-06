@@ -1,7 +1,14 @@
-#include "imports/stdlib.fc";
-
-(int, int, slice, int) load_data () inline asm """
-// 
+"Asm.fif" include
+// automatically generated from `imports/stdlib.fc` `task1.fc` 
+PROGRAM{
+  DECLPROC load_data
+  DECLPROC save_data
+  DECLPROC recv_internal
+  DECLPROC recv_external
+  77871 DECLMETHOD get_seqno
+  93766 DECLMETHOD get_execution_time
+  load_data PROCINLINE:<{
+    // 
     c4 PUSH	//  _1
     CTOS	//  ds
     8 PUSHPOW2	//  ds _4=256
@@ -12,10 +19,9 @@
     32 PUSHINT	//  _3 _6 _9 ds _12=32
     LDUX	//  _3 _6 _9 _21 _20
     DROP	//  _3 _6 _9 _11
-""";
-
-() save_data (int public_key, int execution_time, slice receiver, int seqno) impure inline asm """
-//  public_key execution_time receiver seqno
+  }>
+  save_data PROCINLINE:<{
+    //  public_key execution_time receiver seqno
     s0 s3 XCHG
     NEWC	//  seqno execution_time receiver public_key _4
     256 STU	//  seqno execution_time receiver _6
@@ -26,13 +32,13 @@
     32 STU	//  _11
     ENDC	//  _12
     c4 POP
-""";
-
-() recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
-}
-
-() recv_external(slice in_msg) impure asm """
-//  in_msg
+  }>
+  recv_internal PROC:<{
+    //  my_balance msg_value in_msg_full in_msg_body
+    4 BLKDROP	// 
+  }>
+  recv_external PROC:<{
+    //  in_msg
     32 PUSHINT	//  in_msg _3=32
     LDUX	//  op in_msg
     64 PUSHINT	//  op in_msg _7=64
@@ -127,14 +133,16 @@
     }>ELSE<{
       2DROP	// 
     }>
-""";
-
-int get_seqno() method_id {
-    (_, _, _, int seqno) = load_data();
-    return seqno;
-}
-
-int get_execution_time() method_id {
-    (_, int execution_time, _, _) = load_data();
-    return execution_time;
-}
+  }>
+  get_seqno PROC:<{
+    // 
+    load_data INLINECALLDICT	//  _5 _6 _7 _8
+    3 1 BLKDROP2	//  seqno
+  }>
+  get_execution_time PROC:<{
+    // 
+    load_data INLINECALLDICT	//  _5 _6 _7 _8
+    s2 s3 XCHG
+    3 BLKDROP	//  execution_time
+  }>
+}END>c
